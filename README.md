@@ -74,20 +74,28 @@ oc set env dc/gallery DEV_MODE=true
 pod_name=$(oc get pods | grep gallery | egrep -v 'build|deploy' | grep Running | cut -d " " -f 1) && echo $pod_name
 oc rsync src $pod_name:. ; oc rsync public $pod_name:.
 
+# access the mongodb 
+mongo_pod=$(oc get pods | grep mongodb | egrep -v 'build|deploy' | grep Running | cut -d " " -f 1) && echo $mongo_pod
+oc rsh $mongo_pod
+mongo -u $MONGODB_USER -p $MONGODB_PASSWORD $MONGODB_DATABASE
 ```
 
 ## Local development
 
-Start MongoDB in a Docker container
+You can run the application locally, too. You'll need a local MongoDB instance and node/npm environment. The
+most straight forward way of running MongoDB locally is using the official Docker image.
 
+```bash
+# start MongoDB in a Docker container
 docker run --name mongo-gallery -d -p 27017:27017 mongo
 
-Install dependencies and run the web server
-
+# install dependencies and run the web server
 cd gallery/
 npm install
 npm run dev
+```
 
+Navigate to http://localhost:8080 and hack away.
 
 # Adding a GitHub webhook to trigger OpenShift build process
 
@@ -101,5 +109,3 @@ TL:DR;
 - save the webhook with 'Add webhook'
 
 See the guide here for more details: https://docs.openshift.org/latest/dev_guide/builds/triggering_builds.html
-
-mongo -u $MONGODB_USER -p $MONGODB_PASSWORD $MONGODB_DATABASE
