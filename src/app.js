@@ -9,19 +9,7 @@ const fileType = require('file-type');
 
 var db;
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/index.html'));
-});
-
-app.get('/index.html', function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/index.html'));
-});
-
-app.get('/upload.html', function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/upload.html'));
-});
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.get('/download/:id', function (req, res) {
     var col = db.collection('objects');
@@ -30,7 +18,7 @@ app.get('/download/:id', function (req, res) {
     const fields = {'name': 1, data: 1, mime: 1};
     col.findOne({_id: mongodb.ObjectId(id)}, fields, function (err, item) {
         if (item) {
-            console.log('serving ' + item.name + ", len " + item.data.length() + ', mime '+ item.mime);
+            console.log('serving ' + item.name + ", len " + item.data.length() + ', mime ' + item.mime);
             res.writeHead(200, {
                 'Content-Type': item.mime,
                 'Content-Length': item.data.length()
@@ -50,7 +38,7 @@ app.get('/thumbnail/:id', function (req, res) {
     const fields = {'name': 1, thumbnail: 1, mime: 1};
     col.findOne({_id: mongodb.ObjectId(id)}, fields, function (err, item) {
         if (item) {
-            console.log('serving ' + item.name + ", len " + item.thumbnail.length()+ ', mime '+ item.mime);
+            console.log('serving ' + item.name + ", len " + item.thumbnail.length() + ', mime ' + item.mime);
             res.writeHead(200, {
                 'Content-Type': item.mime,
                 'Content-disposition': 'attachment;filename=' + item.name,
@@ -76,7 +64,11 @@ app.do_search = function (req, res, nameMatch) {
     var col = db.collection('objects');
     col.find(filter, {name: 1, created_at: 1})
         .sort({created_at: -1})
+        .limit(25)
         .toArray(function (err, items) {
+                if (err) {
+                    return console.log(err);
+                }
                 console.log('found ' + items.length + ' items');
                 res.send(items);
             }
@@ -109,12 +101,14 @@ app.post('/upload', function (req, res) {
 
         fs.readFile(file.path, function (err, data) {
             if (err) {
+                fs.unlinkSync(file.path);
                 return console.log(err);
             }
             fileInfo = fileType(data);
             if (!fileInfo.mime.startsWith('image')) {
                 // only images make sense
                 form._error('unsupported file type ' + fileInfo.mime);
+                fs.unlinkSync(file.path);
                 return console.log('unsupported file type ' + fileInfo.mime);
             }
             console.log('Uploading ' + file.name + ' to db, len ' + file.size + ', info ' + fileInfo);

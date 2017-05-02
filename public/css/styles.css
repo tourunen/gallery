@@ -7,6 +7,7 @@ body {
     color: #ffffff;
     background-color: #F89406;
     border: none;
+    float: right;
 }
 
 .upload-btn:hover,
@@ -16,6 +17,10 @@ body {
     color: #ffffff;
     background-color: #FA8900;
     border: none;
+}
+
+.progress-bar {
+    float: right;
 }
 
 #upload-input {
