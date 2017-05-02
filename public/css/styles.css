@@ -1,0 +1,36 @@
+body {
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+}
+
+.upload-btn {
+    color: #ffffff;
+    background-color: #F89406;
+    border: none;
+}
+
+.upload-btn:hover,
+.upload-btn:focus,
+.upload-btn:active,
+.upload-btn.active {
+    color: #ffffff;
+    background-color: #FA8900;
+    border: none;
+}
+
+#upload-input {
+    display: none;
+}
+
+.image-thumbnail {
+    width: 200px;
+	height: 200px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    float: left;
+}
+
+.thumbnail-image {
+    max-width: 150px;
+    max-height: 150px;
+}

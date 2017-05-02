@@ -1,0 +1,23 @@
+{
+  "name": "gallery",
+  "version": "0.5.0",
+  "description": "A simple image gallery application",
+  "repository": "https://github.com/tourunen/gallery",
+  "main": "app.js",
+  "author": "Olli Tourunen",
+  "license": "MIT",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^4.13.3",
+    "formidable": "^1.0.17",
+    "mongodb": "^2.1.16",
+    "sharp": "^0.17.3",
+    "file-type": "^4.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
