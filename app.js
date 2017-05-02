@@ -156,7 +156,7 @@ app.post('/upload', function (req, res) {
 
 // for OpenShift nodejs-mongo template health checks
 app.get('/pagecount', function (req, res) {
-    res.send(0);
+    res.send({pagecount: 0});
 });
 
 app.init = function () {
