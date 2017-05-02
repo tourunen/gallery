@@ -154,6 +154,11 @@ app.post('/upload', function (req, res) {
     form.parse(req);
 });
 
+// for OpenShift nodejs-mongo template health checks
+app.get('/pagecount', function (req, res) {
+    res.send(0);
+});
+
 app.init = function () {
 
     var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
