@@ -103,7 +103,7 @@ app.post('/upload', function (req, res) {
     form.multiples = true;
 
     // store all uploads in the /uploads directory
-    form.uploadDir = path.join(__dirname, '/uploads');
+    form.uploadDir = '/tmp/';
 
     form.on('file', function (field, file) {
 
@@ -133,7 +133,7 @@ app.post('/upload', function (req, res) {
                 };
                 col.insert(record);
                 console.log('Done ' + file.name);
-                fs.unlink(file.path);
+                fs.unlinkSync(file.path);
             });
         });
     });
