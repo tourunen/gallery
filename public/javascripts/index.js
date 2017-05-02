@@ -16,7 +16,7 @@ $(function () {
         url: '/search/.',
         type: 'GET',
         success: function (data) {
-            $('#message').text('search complete, found ' + data.length + ' items');
+            $('#message').text('fetch complete, found ' + data.length + ' items');
             for (var i = 0; i < data.length; i++) {
                 $('#image_list').append(createImageElement(data[i]));
             }
