@@ -19,8 +19,8 @@ body {
     border: none;
 }
 
-.progress-bar {
-    float: right;
+.progress {
+    height: 5px
 }
 
 #upload-input {

@@ -10,13 +10,13 @@ var createImageElement = function (imageData) {
 
 // on load
 $(function () {
-    $('#message').text('starting');
+    $('#message').text('fetching latest images');
 
     $.ajax({
         url: '/search/.',
         type: 'GET',
         success: function (data) {
-            $('#message').text('fetch complete, found ' + data.length + ' items');
+            $('#message').text('fetched ' + data.length + ' latest images');
             for (var i = 0; i < data.length; i++) {
                 $('#image_list').append(createImageElement(data[i]));
             }
