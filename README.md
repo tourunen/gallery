@@ -20,22 +20,61 @@ Select: JavaScript
 
 Select: Node.js + MongoDB (Persistent)
 
-Change:
+In the template configuration, change:
 
 - name: gallery
 - Git repository URL: https://github.com/tourunen/gallery.git (or to your clone, if you wish to hack on this).
+- database: gallery
 
 Click on "Continue to Overview"
 
 You can see that a number of resources have been created for the application
 
 - a service and a pod for MongoDB
+- a persistent volume for MongoDB data
 - a service and a pod for the web server
-- a route (public DNS name) to the application
-
-In addition, a persistent volume has been allocated for MongoDB data.
+- public DNS name to access the application
 
 ## OpenShift CLI
+
+```bash
+# create a new project based on your username
+oc new-project "$(oc whoami)-gallery"
+
+# find out the templates starting with 'node'
+oc new-app -L | grep ^node
+
+# describe a template in the global 'openshift' -namespace
+oc describe template -n openshift nodejs-mongo-persistent
+
+# create a new application, giving parameters from the template with -p
+oc new-app --name gallery --template nodejs-mongo-persistent \
+  -p NAME=gallery \
+  -p DATABASE_NAME=gallery \
+  -p SOURCE_REPOSITORY_URL=https://github.com/tourunen/gallery
+
+# view logs for the build that was triggered
+oc logs --follow bc/gallery
+
+# view pods in the project, waiting for status changes
+oc get pods -w
+
+# get the latest running pod and start a shell in it
+pod_name=$(oc get pods | grep gallery | egrep -v 'build|deploy' | grep Running | cut -d " " -f 1) && echo $pod_name
+oc rsh $pod_name
+
+# delete all pods and watch the recovery
+oc delete pods --all; oc get pods -w
+
+# deploy the application in development mode for hot restart under nodemon 
+# (see https://docs.openshift.org/latest/using_images/s2i_images/nodejs.html#nodejs-configuration)
+oc set env dc/gallery DEV_MODE=true
+
+# copy local changes to the running pod to for quick testing
+pod_name=$(oc get pods | grep gallery | egrep -v 'build|deploy' | grep Running | cut -d " " -f 1) && echo $pod_name
+oc rsync src $pod_name:. ; oc rsync public $pod_name:.
+
+```
 
 ## Local development
 
