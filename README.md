@@ -60,7 +60,8 @@ oc logs --follow bc/gallery
 oc get pods -w
 
 # get the latest running pod and start a shell in it
-pod_name=$(oc get pods | grep gallery | egrep -v 'build|deploy' | grep Running | cut -d " " -f 1) && echo $pod_name
+pod_name=$(oc get pods | grep gallery | egrep -v 'build|deploy' | grep Running | tail -1 | cut -d " " -f 1) \
+  && echo $pod_name
 oc rsh $pod_name
 
 # delete all pods and watch the recovery
@@ -71,13 +72,19 @@ oc delete pods --all; oc get pods -w
 oc set env dc/gallery DEV_MODE=true
 
 # copy local changes to the running pod to for quick testing
-pod_name=$(oc get pods | grep gallery | egrep -v 'build|deploy' | grep Running | cut -d " " -f 1) && echo $pod_name
+pod_name=$(oc get pods | grep gallery | egrep -v 'build|deploy' | grep Running | tail -1 | cut -d " " -f 1) \
+  && echo $pod_name
 oc rsync src $pod_name:. ; oc rsync public $pod_name:.
 
 # access the mongodb 
-mongo_pod=$(oc get pods | grep mongodb | egrep -v 'build|deploy' | grep Running | cut -d " " -f 1) && echo $mongo_pod
+mongo_pod=$(oc get pods | grep mongodb | egrep -v 'build|deploy' | grep Running | tail -1| cut -d " " -f 1) \
+  && echo $mongo_pod
 oc rsh $mongo_pod
 mongo -u $MONGODB_USER -p $MONGODB_PASSWORD $MONGODB_DATABASE
+
+# set the deployment to production mode and scale the web server tier up to 3 pods
+oc set env dc/gallery DEV_MODE=false
+oc scale dc gallery --replicas=3
 ```
 
 ## Local development
