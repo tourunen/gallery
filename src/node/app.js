@@ -9,7 +9,7 @@ const fileType = require('file-type');
 
 var db;
 
-app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(express.static(path.join(__dirname, '../..', 'public')));
 
 app.get('/download/:id', function (req, res) {
     var col = db.collection('objects');
