@@ -10,6 +10,9 @@ The application is composed of two tiers: web server and a MongoDB
 database. All state (barring uploads in progress) is kept in the database,
 so you can scale the web tier independently of the database.
 
+I should mention that this was the first time I used jQuery + NodeJS + Mongo combination, and 
+it shows. In the current state, do not that this as a good example on using those. Pull requests welcome.
+
 # How to run it
 
 ## OpenShift GUI
