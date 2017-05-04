@@ -37,6 +37,8 @@ You can see that a number of resources have been created for the application
 
 ## OpenShift CLI
 
+To get started with using command line tools, go to Help -> Command line tools in the WEB UI.
+
 ```bash
 # create a new project based on your username
 oc new-project "$(oc whoami)-gallery"
@@ -72,6 +74,8 @@ oc delete pods --all; oc get pods -w
 oc set env dc/gallery DEV_MODE=true
 
 # copy local changes to the running pod to for quick testing
+# first move to the source folder
+cd gallery
 pod_name=$(oc get pods | grep gallery | egrep -v 'build|deploy' | grep Running | tail -1 | cut -d " " -f 1) \
   && echo $pod_name
 oc rsync src $pod_name:. ; oc rsync public $pod_name:.
